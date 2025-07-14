@@ -5,9 +5,9 @@ import os
 app = Flask(__name__)
 
 # TODO: Set your AWS credentials (or use environment variables/instance roles)
-SSM_PARAMETER_NAME = 'YOUR_SSM_PARAMETER_NAME'  # Change this
-SNS_TOPIC_ARN = 'YOUR_SNS_TOPIC_ARN'  # Change this
-RECIPIENT_EMAIL = 'your-email@example.com'  # Change this to your email
+SSM_PARAMETER_NAME = os.environ.get('SSM_PARAMETER_NAME')
+SNS_TOPIC_ARN = os.environ.get('SNS_TOPIC_ARN')
+RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL')
 
 ssm = boto3.client('ssm', region_name='us-east-1')  # Change region if needed
 sns = boto3.client('sns', region_name='us-east-1')

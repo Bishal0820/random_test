@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Password Check</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900|Dancing+Script:700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fbeee6 0%, #f7cac9 100%);
+            font-family: 'Playfair Display', serif;
+            position: relative;
+        }
+        /* Floral SVG background overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="200" cy="100" rx="120" ry="60" fill="%23f7cac9" fill-opacity="0.25"/><ellipse cx="600" cy="500" rx="140" ry="70" fill="%23b5ead7" fill-opacity="0.18"/><ellipse cx="700" cy="120" rx="80" ry="40" fill="%23ffb7b2" fill-opacity="0.18"/><ellipse cx="100" cy="500" rx="100" ry="50" fill="%23b5ead7" fill-opacity="0.18"/></svg>');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(255,255,255,0.97);
+            padding: 3.2rem 2.5rem 2.5rem 2.5rem;
+            border-radius: 28px;
+            box-shadow: 0 8px 32px 0 rgba(255, 182, 193, 0.18), 0 2px 8px 0 rgba(212, 175, 55, 0.08);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border: 2.5px solid #f7cac9;
+            animation: fadeInCard 1.2s ease;
+        }
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .floral-corner {
+            position: fixed;
+            z-index: 0;
+        }
+        .floral-corner.tl { top: 0; left: 0; width: 120px; height: 120px; }
+        .floral-corner.tr { top: 0; right: 0; width: 120px; height: 120px; transform: scaleX(-1); }
+        .floral-corner.bl { bottom: 0; left: 0; width: 120px; height: 120px; transform: scaleY(-1); }
+        .floral-corner.br { bottom: 0; right: 0; width: 120px; height: 120px; transform: scale(-1, -1); }
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #e75480;
+            margin-bottom: 0.7rem;
+            font-size: 2.7rem;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 8px #f7cac9;
+        }
+        .gold-divider {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #d4af37 0%, #fffbe6 100%);
+            border-radius: 2px;
+            margin: 0 auto 1.3rem auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.7rem;
+            color: #a47149;
+            font-weight: 500;
+            font-size: 1.1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1.5px solid #f7cac9;
+            border-radius: 12px;
+            margin-bottom: 1.3rem;
+            font-size: 1.08rem;
+            background: #fffaf7;
+            transition: border 0.2s, box-shadow 0.2s;
+            font-family: 'Playfair Display', serif;
+        }
+        input[type="password"]:focus {
+            border: 2px solid #e75480;
+            outline: none;
+            box-shadow: 0 0 0 2px #f7cac944;
+        }
+        button {
+            background: linear-gradient(90deg, #e75480 0%, #b5ead7 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 2.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            font-family: 'Dancing Script', cursive;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(231, 84, 128, 0.10);
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #e75480 0%, #ffb7b2 100%);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 18px rgba(231, 84, 128, 0.18);
+        }
+        #result {
+            margin-top: 1.4rem;
+            font-size: 1.13rem;
+            color: #e75480;
+            min-height: 1.5em;
+            font-family: 'Playfair Display', serif;
+        }
+        /* Decorative flower in corner */
+        .flower {
+            position: absolute;
+            top: -38px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 70px;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <svg class="floral-corner tl" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="40" rx="40" ry="18" fill="#f7cac9" fill-opacity="0.25"/>
+        <ellipse cx="30" cy="90" rx="30" ry="12" fill="#b5ead7" fill-opacity="0.18"/>
+        <ellipse cx="100" cy="20" rx="18" ry="8" fill="#ffb7b2" fill-opacity="0.18"/>
+    </svg>
+    <svg class="floral-corner tr" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="40" rx="40" ry="18" fill="#f7cac9" fill-opacity="0.25"/>
+        <ellipse cx="30" cy="90" rx="30" ry="12" fill="#b5ead7" fill-opacity="0.18"/>
+        <ellipse cx="100" cy="20" rx="18" ry="8" fill="#ffb7b2" fill-opacity="0.18"/>
+    </svg>
+    <svg class="floral-corner bl" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="40" rx="40" ry="18" fill="#f7cac9" fill-opacity="0.25"/>
+        <ellipse cx="30" cy="90" rx="30" ry="12" fill="#b5ead7" fill-opacity="0.18"/>
+        <ellipse cx="100" cy="20" rx="18" ry="8" fill="#ffb7b2" fill-opacity="0.18"/>
+    </svg>
+    <svg class="floral-corner br" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="40" rx="40" ry="18" fill="#f7cac9" fill-opacity="0.25"/>
+        <ellipse cx="30" cy="90" rx="30" ry="12" fill="#b5ead7" fill-opacity="0.18"/>
+        <ellipse cx="100" cy="20" rx="18" ry="8" fill="#ffb7b2" fill-opacity="0.18"/>
+    </svg>
+    <div class="container">
+        <svg class="flower" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="35" cy="35" r="12" fill="#e75480"/>
+            <ellipse cx="35" cy="15" rx="8" ry="16" fill="#f7cac9"/>
+            <ellipse cx="35" cy="55" rx="8" ry="16" fill="#f7cac9"/>
+            <ellipse cx="15" cy="35" rx="16" ry="8" fill="#b5ead7"/>
+            <ellipse cx="55" cy="35" rx="16" ry="8" fill="#b5ead7"/>
+        </svg>
+        <h1>Romantic Password Portal</h1>
+        <div class="gold-divider"></div>
+        <form id="pw-form">
+            <label for="password">Enter Your Secret Word:</label>
+            <input type="password" id="password" name="password" required autocomplete="off"><br>
+            <button type="submit">Send My Love</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('pw-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const res = await fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+            const data = await res.json();
+            document.getElementById('result').innerText = data.message;
+        });
+    </script>
+</body>
+</html> 
